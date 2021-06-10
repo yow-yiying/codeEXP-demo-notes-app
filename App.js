@@ -14,7 +14,7 @@ const SAMPLE_NOTES = [
   {title: "water the plant", id: "3", done: false },
 ];
 
-function NotesScreen({ navigation }) {
+function NotesScreen({ route, navigation }) {
   const [notes, setNotes] = useState(SAMPLE_NOTES);
   
   useEffect(() => {
@@ -31,6 +31,18 @@ function NotesScreen({ navigation }) {
       ),
     });
   });
+
+  useEffect(() => {
+    if (route.params?.todoText) {
+      const newNote = {
+        title: route.params.todoText,
+        id: notes.length.toString(),
+        done: false,
+      };
+      setNotes([...notes, newNote]);
+    } //? is javascript Optional
+  }, [route.params?.todoText] //the {} function will only trigger when route.params.todoText changes
+  );
 
   function renderItem({ item }) {
     return (
@@ -54,8 +66,10 @@ function AddScreen({ navigation }) {
     <View style = {styles.container}>
       <Text>Add your note</Text>
       <TextInput style = {styles.textInput} onChangeText = {(text) => setTodoText(text)}/>
-
-      <Button onPress= {() => navigation.goBack()} title = "Submit" />
+      
+      {/* use navigation.navigate() to pass in data to another screen (instead of goback function) */}
+      {/* use useEffect to access the data passed */}
+      <Button onPress= {() => navigation.navigate("Notes", { todoText })} title = "Submit" /> 
       <Button onPress = {() => navigation.goBack()} title = "Cancel" />
 
       <Text>{todoText}</Text>
