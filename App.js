@@ -14,9 +14,36 @@ const SAMPLE_NOTES = [
   {title: "water the plant", id: "3", done: false },
 ];
 
+
+
 function NotesScreen({ route, navigation }) {
   const [notes, setNotes] = useState(SAMPLE_NOTES);
+
+  function refreshNotes() {
+    db.transaction( tx => {
+      tx.executeSql("SELECT * FROM notes", null, 
+      (txObj, { rows: { _array }}) => setNotes(_array),
+      (txObj, error) => console.log("Error ", error)
+      );
+    });
+  }
   
+  //Create the DB on first run
+  //executes SQL code, if error -> null, if completed -> refreshNotes function
+  useEffect(() => {
+    db.transaction( tx => {
+      tx.executeSql(`
+      CREATE TABLE IF NOT EXISTS notes
+      (id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT,
+        done INT);
+      `)
+    }, null, refreshNotes);
+  }, []);
+
+
+  
+  // Adds the + button in the top right
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -32,15 +59,24 @@ function NotesScreen({ route, navigation }) {
     });
   });
 
+  // Responds to coming back from the add screen
   useEffect(() => {
     if (route.params?.todoText) {
-      const newNote = {
-        title: route.params.todoText,
-        id: notes.length.toString(),
-        done: false,
-      };
-      setNotes([...notes, newNote]);
-    } //? is javascript Optional
+      // const newNote = {
+      //   title: route.params.todoText,
+      //   id: notes.length.toString(),
+      //   done: false,
+      // };
+      // setNotes([...notes, newNote]);
+     //? is javascript Optional
+    db.transaction( tx => {
+      tx.executeSql("INSERT INTO notes (done, title) VALUES (0, ?)", [
+        route.params.todoText,
+      ]);
+  }, 
+  null, refreshNotes
+  );
+  }
   }, [route.params?.todoText] //the {} function will only trigger when route.params.todoText changes
   );
 
