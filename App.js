@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Button } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, Button, TextInput } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Entypo } from '@expo/vector-icons';
@@ -47,11 +47,18 @@ function NotesScreen({ navigation }) {
   );
 }
 
-function AddScreen() {
+function AddScreen({ navigation }) {
+  const [todoText, setTodoText] = useState("");
+
   return (
     <View style = {styles.container}>
-      <Text>Yoooo</Text>
-      <Button onPress = {() => navigation.goBack()} title = "Back" />
+      <Text>Add your note</Text>
+      <TextInput style = {styles.textInput} onChangeText = {(text) => setTodoText(text)}/>
+
+      <Button onPress= {() => navigation.goBack()} title = "Submit" />
+      <Button onPress = {() => navigation.goBack()} title = "Cancel" />
+
+      <Text>{todoText}</Text>
     </View>
   )
 }
@@ -90,13 +97,13 @@ export default function App() {
 const styles = StyleSheet.create( {
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'pink',
     alignItems: 'center',
     justifyContent: 'center',
   },
 
   headerStyle: {
-    backgroundColor: "lightyellow",
+    backgroundColor: "lightblue",
   },
 
   list: {
@@ -110,4 +117,12 @@ const styles = StyleSheet.create( {
     borderBottomColor: "#999",
     paddingLeft: 10,
   },
+
+  textInput: {
+    borderColor: "black",
+    padding: 10,
+    backgroundColor:"white",
+    margin: 10,
+    width: "90%",
+  }
 });
