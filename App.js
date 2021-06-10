@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, Button } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Entypo } from '@expo/vector-icons';
@@ -48,7 +48,12 @@ function NotesScreen({ navigation }) {
 }
 
 function AddScreen() {
-  return <Text>Add!!!</Text>
+  return (
+    <View style = {styles.container}>
+      <Text>Yoooo</Text>
+      <Button onPress = {() => navigation.goBack()} title = "Back" />
+    </View>
+  )
 }
 
 const Stack = createStackNavigator();
@@ -74,7 +79,7 @@ function NotesStackScreen() {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator mode = "modal">
+      <Stack.Navigator mode = "modal" headerMode = "none">
         <Stack.Screen name = "NotesStack" component = {NotesStackScreen} options = {{headerShown: false}}/>
         <Stack.Screen name = "Add" component={AddScreen}/>
       </Stack.Navigator>
